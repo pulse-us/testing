@@ -1,2 +1,0 @@
-# QA
-Pulse Automation Code
