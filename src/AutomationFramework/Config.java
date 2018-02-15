@@ -15,8 +15,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 
 public class Config {
-	public String FireFoxExePath = "C:\\Julie\\geckodriver.exe";
-	public String ChromeExePath = "C:\\DRIVERS\\chromedriver.exe";
+	public String FireFoxExePath = "C:\\Downloaded Things\\geckodriver.exe";
+	public String ChromeExePath = "C:\\Downloaded Things\\chromedriver.exe";
 	public String WebsiteURL = "https://california.demo.collaborativefusion.com/";
 	public String ValidCredFilePath = "C:\\Julie\\6-PULSE\\PULSECredentials.txt";
 	
