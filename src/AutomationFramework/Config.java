@@ -17,8 +17,10 @@ import org.testng.annotations.Test;
 public class Config {
 	public String FireFoxExePath = "C:\\Downloaded Things\\geckodriver.exe";
 	public String ChromeExePath = "C:\\Downloaded Things\\chromedriver.exe";
-	public String WebsiteURL = "https://california.demo.collaborativefusion.com/";
+	//public String WebsiteURL = "https://california.demo.collaborativefusion.com/";
+	public String WebsiteURL = "https://www.pulsedemo.org";
 	public String ValidCredFilePath = "C:\\Julie\\6-PULSE\\PULSECredentials.txt";
+	public String PatientSearchFile = "C:\\Julie\\6-PULSE\\SearchInput.txt";
 	
 	@Test
 	public WebDriver Open_FireFox() throws InterruptedException {
@@ -57,14 +59,19 @@ public class Config {
 				}
 				
 				BR.close();
-				driver.findElement(By.id("username")).sendKeys(cred.get(0));
+				/*driver.findElement(By.id("username")).sendKeys(cred.get(0));
 		        driver.findElement(By.id("password")).sendKeys(cred.get(1));
 		        driver.findElement(By.id("login_submit")).click();
-		        
+		        */
+				driver.findElement(By.id("username")).sendKeys(cred.get(0));
+				driver.findElement(By.id("password")).sendKeys(cred.get(1));
+				driver.findElement(By.id("login-button")).click();
+				
 				WebDriverWait wait = new WebDriverWait(driver,2);
 				
 				WebElement nextmessageElement = wait.until(
-						ExpectedConditions.presenceOfElementLocated(By.id("welcome_name")));
+						ExpectedConditions.presenceOfElementLocated(By.id("selectAcfPrefix")));
+								//id("welcome_name")));
 				
 				//Wait for 5 Sec
 				Thread.sleep(5000);

@@ -5,7 +5,7 @@
     <classes>
       <class name="AutomationFramework.PULSE_US_Test">
         <methods>
-          <include name="Login_Success_Test_TC001"/>
+          <include name="Search_Test_TC003"/>
         </methods>
       </class> <!-- AutomationFramework.PULSE_US_Test -->
     </classes>
