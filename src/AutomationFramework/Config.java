@@ -19,13 +19,6 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 public class Config {
-	//public String FireFoxExePath = "C:\\Downloaded Things\\geckodriver.exe";
-	//public String ChromeExePath = "C:\\Downloaded Things\\chromedriver.exe";
-	////public String WebsiteURL = "https://california.demo.collaborativefusion.com/";
-	//public String WebsiteURL = "https://www.pulsedemo.org";
-	//public String ValidCredFilePath = "C:\\Julie\\6-PULSE\\PULSECredentials.txt";
-	//public String InvalidCredFilePath = "C:\\Julie\\6-PULSE\\PULSEInvalidCredentials.txt";
-	//public String PatientSearchFile = "C:\\Julie\\6-PULSE\\SearchInput.txt";
 	
 	public String FireFoxExePath;
 	public String ChromeExePath;
@@ -35,7 +28,6 @@ public class Config {
 	public String PatientSearchFile;
 	public String AcfSelectFile;
 	
-		
 	@BeforeTest
 	public void Read_PropertyFile() throws InterruptedException  {
 		
@@ -52,8 +44,6 @@ public class Config {
 			InvalidCredFilePath = props.getProperty("InvalidCredFilePath");
 			PatientSearchFile = props.getProperty("PatientSearchFile");
 			AcfSelectFile = props.getProperty("AcfSelectFile");
-			//System.out.print("FireFoxExePath is: " + FireFoxExePath);
-			//System.out.print("ChromeExePath is: " + ChromeExePath);
 			reader.close();
 			} catch (FileNotFoundException ex) {
 				// file does not exist
@@ -105,15 +95,6 @@ public class Config {
 				
 				objLoginPage = new LoginPage(driver);
 				
-				/*driver.findElement(By.id("username")).sendKeys(cred.get(0));
-		        driver.findElement(By.id("password")).sendKeys(cred.get(1));
-		        driver.findElement(By.id("login_submit")).click();
-		        */
-				/*driver.findElement(By.id("username")).sendKeys(cred.get(0));
-				driver.findElement(By.id("password")).sendKeys(cred.get(1));
-				driver.findElement(By.id("login-button")).click();
-				*/
-				
 				Thread.sleep(5000);
 				
 				objLoginPage.loginToPulse(cred.get(0), cred.get(1));
@@ -121,7 +102,6 @@ public class Config {
 				
 				WebElement nextmessageElement = wait.until(
 						ExpectedConditions.presenceOfElementLocated(By.id("selectAcfPrefix")));
-								//id("welcome_name")));
 				
 				//Wait for 5 Sec
 				Thread.sleep(5000);
