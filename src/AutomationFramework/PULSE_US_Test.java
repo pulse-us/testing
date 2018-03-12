@@ -1,6 +1,7 @@
 package AutomationFramework;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -34,6 +35,7 @@ import bsh.ParseException;
 
 public class PULSE_US_Test  extends Config {
 	
+	
 	@Test
 	public void Login_Success_Test_TC001() throws InterruptedException, IOException {
 		WebDriver driver = Login();
@@ -42,19 +44,27 @@ public class PULSE_US_Test  extends Config {
 
 	@Test
 	public void Login_UnSuccessFul_Test_TC002() throws InterruptedException, IOException {
+//		Read_PropertyFile();
 		WebDriver driver = Open_Chrome();
+		LoginPage objLoginPage;
 
-		String credFile = "C:\\Julie\\6-PULSE\\PULSEInvalidCredentials.txt";
-		FileReader FR = new FileReader(credFile);
+		//String credFile = "C:\\Julie\\6-PULSE\\PULSEInvalidCredentials.txt";
+		FileReader FR = new FileReader(InvalidCredFilePath);
 		BufferedReader BR = new BufferedReader(FR);
 		ArrayList<String> cred = new ArrayList<String>();
 
 		for (int i = 0; BR.ready();i++) { cred.add(BR.readLine()); }
 
 		BR.close();
-		driver.findElement(By.id("username")).sendKeys(cred.get(0));
+		
+		/*driver.findElement(By.id("username")).sendKeys(cred.get(0));
 		driver.findElement(By.id("password")).sendKeys(cred.get(1));
 		driver.findElement(By.id("login-button")).click();
+		*/
+		
+		objLoginPage = new LoginPage(driver);
+		Thread.sleep(5000);
+		objLoginPage.loginToPulse(cred.get(0), cred.get(1));
 		
 		WebDriverWait wait = new WebDriverWait(driver,2);
 
@@ -68,9 +78,10 @@ public class PULSE_US_Test  extends Config {
 	@Test
 	public void Search_Test_TC003() throws InterruptedException, IOException {
 		WebDriver driver = Login();
-	
+		SearchPage objSearchPage;
+		objSearchPage = new SearchPage(driver);
 		
-		Select selAcfPfx = new Select(driver.findElement(By.id("selectAcfPrefix")));
+		/*Select selAcfPfx = new Select(driver.findElement(By.id("selectAcfPrefix")));
 		selAcfPfx.selectByVisibleText("Amador");
 		
 		Select selAcfSfx = new Select(driver.findElement(By.id("selectAcfSuffix")));
@@ -79,6 +90,20 @@ public class PULSE_US_Test  extends Config {
 		Thread.sleep(2000);
 		
 		driver.findElement(By.id("acfSelect")).click();
+		*/
+		String acfFile = AcfSelectFile;
+		FileReader AFR = new FileReader(acfFile);
+		BufferedReader ABR = new BufferedReader(AFR);
+		ArrayList<String> acfCrt = new ArrayList<String>();
+		
+		for( int i = 0; ABR.ready();i++)
+		{
+			acfCrt.add(ABR.readLine());
+		}
+		
+		ABR.close();
+		
+		objSearchPage.clickAcfSelect(acfCrt.get(0),acfCrt.get(1));
 		
 		System.out.println("Submitted ACF");
 		WebDriverWait wait = new WebDriverWait(driver,2);
@@ -104,7 +129,7 @@ public class PULSE_US_Test  extends Config {
 		//+" "+srchCrt.get(3)+" "+srchCrt.get(4)+" "+srchCrt.get(5)
 			//	);
 		
-		driver.findElement(By.id("given")).sendKeys(srchCrt.get(0));
+		/*driver.findElement(By.id("given")).sendKeys(srchCrt.get(0));
 		driver.findElement(By.id("family")).sendKeys(srchCrt.get(1));
 		
 		Select selSrchGen = new Select(driver.findElement(By.id("gender")));
@@ -122,12 +147,18 @@ public class PULSE_US_Test  extends Config {
 		driver.findElement(By.id("dobYear")).sendKeys(srchCrt.get(5));
 		
 		driver.findElement(By.id("queryFormSubmit")).click();
+		*/
+		
+		objSearchPage.clickSearchSubmit(srchCrt.get(0),srchCrt.get(1),srchCrt.get(2),
+				srchCrt.get(3),srchCrt.get(4),srchCrt.get(5),
+				srchCrt.get(6),srchCrt.get(7),srchCrt.get(8),srchCrt.get(9),srchCrt.get(10)
+				);
 		
 		LocalDateTime submitTime = LocalDateTime.now(); 
 		//try { 
 			DateTimeFormatter format = DateTimeFormatter.ofPattern("MMM dd, yyyy hh:mm:ss a"); 
 			String submitTimeStr = submitTime.format(format); 
-			System.out.printf("Arriving at : %s %n", submitTimeStr); 
+			System.out.printf("Data Submission Time : %s %n", submitTimeStr); 
 		//	} 
 		/*catch (DateTimeException ex) 
 		{ 
@@ -194,12 +225,87 @@ public class PULSE_US_Test  extends Config {
 		if ((tabFullName.getText()).equals(srchCrt.get(0)+" "+srchCrt.get(1))
 			//&& 	tabDOB.equals(InputDOBDate)
 			&& (tabGender.getText()).equals(srchCrt.get(2).substring(0,1))
-			&& (tabLastUpdated.getText()).equals(submitTimeStr)
+			//&& (tabLastUpdated.getText()).equals(submitTimeStr)
 			)
 		{ System.out.println("Search Successfull");
 		}
 		
+		WebElement tabRecFound = baseTable.findElement(By.xpath(
+				"/html/body/div/div[1]/div[2]/div[2]/ai-patient-review/div/div/div[2]/div/div/div/table/tbody/tr[1]/td[5]"
+				));;
+		while (tabRecFound.getText().contains("pending") )
+		{
+			System.out.println("TabRecFound " +tabRecFound.getText());							
+		
+		}		
+		
+		System.out.println("TabRecFound " +tabRecFound.getText());
+		
+		WebElement stg_button = driver.findElement(By.xpath("//*[@class='btn btn-success btn-sm ng-scope']"));
+		
+		System.out.println("Stg Button Text " +stg_button.getText());
+		
+		stg_button.click();
+		
+		WebElement review_button = driver.findElement(By.xpath("//*[@class='col-md-2 col-sm-3']"));
+		
+		WebElement r_b = driver.findElement(By.xpath("//*[@class='btn btn-lg btn-block btn-primary']"));
+		((JavascriptExecutor) driver).executeScript("arguments[0].click();", r_b);
+		//r_b.click();
+		//review_button.click();
+		
+		nextmessageElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@class='ng-isolate-scope']")));
+		
+		Thread.sleep(2000);
+		
+		System.out.println("Clicked Review Button");
+		
 		driver.quit();
+
 	}
+
+	@Test
+	public void Review_Test_TC004() throws InterruptedException, IOException {
+		WebDriver driver = Login();
+		
+		SearchPage objSearchPage;
+		objSearchPage = new SearchPage(driver);
+		
+		/*Select selAcfPfx = new Select(driver.findElement(By.id("selectAcfPrefix")));
+		selAcfPfx.selectByVisibleText("Amador");
+		
+		Select selAcfSfx = new Select(driver.findElement(By.id("selectAcfSuffix")));
+		selAcfSfx.selectByVisibleText("04 High School");
+		
+		Thread.sleep(2000);
+		
+		driver.findElement(By.id("acfSelect")).click();
+		*/
+		String acfFile = AcfSelectFile;
+		FileReader AFR = new FileReader(acfFile);
+		BufferedReader ABR = new BufferedReader(AFR);
+		ArrayList<String> acfCrt = new ArrayList<String>();
+		
+		for( int i = 0; ABR.ready();i++)
+		{
+			acfCrt.add(ABR.readLine());
+		}
+		
+		ABR.close();
+		
+		objSearchPage.clickAcfSelect(acfCrt.get(0),acfCrt.get(1));
+		
+		System.out.println("Submitted ACF");
+		WebDriverWait wait = new WebDriverWait(driver,4);
+		
+		
+		
+		WebElement review_button = driver.findElement(By.xpath("//*[@class='col-md-2 col-sm-3']"));
+		
+		WebElement r_b = driver.findElement(By.xpath("//*[@class='btn btn-lg btn-block btn-primary']"));
+		((JavascriptExecutor) driver).executeScript("arguments[0].click();", r_b);
+		//r_b.click();
+		//review_button.click();
+	}	
 
 }
