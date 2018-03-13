@@ -1,4 +1,4 @@
-package AutomationFramework;
+package org.pulseus.test;
 
 import org.openqa.selenium.By;
 

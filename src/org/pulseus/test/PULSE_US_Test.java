@@ -1,8 +1,10 @@
-package AutomationFramework;
+package org.pulseus.test;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -14,28 +16,42 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 public class PULSE_US_Test  extends Config {
-	
-	@Test
+    
+    private static WebDriver driver;
+    private static final String ACF_SELECT_FILE = "ACFPrefixSuffix.txt";
+    private static final String INVALID_CRED_FILE = "PULSEInvalidCredentials.txt";
+    private static final String SEARCH_INPUT_FILE = "SearchInput.txt";
+    
+    /**
+     * Close browser windows and terminate WebDriver session.
+     */
+    @AfterMethod
+    public void afterMethod() {
+        driver.quit();
+    }
+
+    @Test
 	public void Login_Success_Test_TC001() throws InterruptedException, IOException {
-		WebDriver driver = Login();
-		driver.quit();
+		driver = Login();
 	}
 
 	@Test
 	public void Login_UnSuccessFul_Test_TC002() throws InterruptedException, IOException {
-		WebDriver driver = Open_Chrome();
+		driver = Open_Chrome();
 		LoginPage objLoginPage;
 
-		FileReader FR = new FileReader(InvalidCredFilePath);
-		BufferedReader BR = new BufferedReader(FR);
+		InputStream in = PULSE_US_Test.class.getClassLoader().getResourceAsStream(INVALID_CRED_FILE);
+		BufferedReader BR = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 		ArrayList<String> cred = new ArrayList<String>();
 
 		for (int i = 0; BR.ready();i++) { cred.add(BR.readLine()); }
 
 		BR.close();
+		in.close();
 		
 		objLoginPage = new LoginPage(driver);
 		Thread.sleep(5000);
@@ -46,19 +62,16 @@ public class PULSE_US_Test  extends Config {
 		WebElement nextmessageElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("error-box")));
 
 		if (nextmessageElement.isDisplayed()) { System.out.println("UnSuccessfully LogIn"); } else {System.out.println("Login Successful");}
-		driver.quit();
-
 	}
 
 	@Test
 	public void Search_Test_TC003() throws InterruptedException, IOException {
-		WebDriver driver = Login();
+		driver = Login();
 		SearchPage objSearchPage;
 		objSearchPage = new SearchPage(driver);
 
-		String acfFile = AcfSelectFile;
-		FileReader AFR = new FileReader(acfFile);
-		BufferedReader ABR = new BufferedReader(AFR);
+        InputStream in = PULSE_US_Test.class.getClassLoader().getResourceAsStream(ACF_SELECT_FILE);
+        BufferedReader ABR = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 		ArrayList<String> acfCrt = new ArrayList<String>();
 		
 		for( int i = 0; ABR.ready();i++)
@@ -67,6 +80,7 @@ public class PULSE_US_Test  extends Config {
 		}
 		
 		ABR.close();
+		in.close();
 		
 		objSearchPage.clickAcfSelect(acfCrt.get(0),acfCrt.get(1));
 		
@@ -78,9 +92,8 @@ public class PULSE_US_Test  extends Config {
 		
 		System.out.println("In Search Page");
 		
-		String patFile = PatientSearchFile;
-		FileReader FR = new FileReader(patFile);
-		BufferedReader BR = new BufferedReader(FR);
+		in = PULSE_US_Test.class.getClassLoader().getResourceAsStream(SEARCH_INPUT_FILE);
+		BufferedReader BR = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 		ArrayList<String> srchCrt = new ArrayList<String>();
 		
 		for (int i = 0; BR.ready();i++)
@@ -89,6 +102,7 @@ public class PULSE_US_Test  extends Config {
 		}
 		
 		BR.close();
+		in.close();
 				objSearchPage.clickSearchSubmit(srchCrt.get(0),srchCrt.get(1),srchCrt.get(2),
 				srchCrt.get(3),srchCrt.get(4),srchCrt.get(5),
 				srchCrt.get(6),srchCrt.get(7),srchCrt.get(8),srchCrt.get(9),srchCrt.get(10)
@@ -172,21 +186,17 @@ public class PULSE_US_Test  extends Config {
 		Thread.sleep(2000);
 		
 		System.out.println("Clicked Review Button");
-		
-		driver.quit();
-
 	}
 
 	@Test
 	public void Review_Test_TC004() throws InterruptedException, IOException {
-		WebDriver driver = Login();
+		driver = Login();
 		
 		SearchPage objSearchPage;
 		objSearchPage = new SearchPage(driver);
 		
-		String acfFile = AcfSelectFile;
-		FileReader AFR = new FileReader(acfFile);
-		BufferedReader ABR = new BufferedReader(AFR);
+        InputStream in = PULSE_US_Test.class.getClassLoader().getResourceAsStream(ACF_SELECT_FILE);
+        BufferedReader ABR = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 		ArrayList<String> acfCrt = new ArrayList<String>();
 		
 		for( int i = 0; ABR.ready();i++)
@@ -195,6 +205,7 @@ public class PULSE_US_Test  extends Config {
 		}
 		
 		ABR.close();
+		in.close();
 		
 		objSearchPage.clickAcfSelect(acfCrt.get(0),acfCrt.get(1));
 		

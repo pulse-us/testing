@@ -1,7 +1,0 @@
-FireFoxExePath=C:\\PULSE\\geckodriver.exe
-ChromeExePath=C:\\PULSE\\chromedriver.exe
-WebsiteURL=https://www.pulsedemo.org
-ValidCredFilePath=C:\\PULSE\\PULSECredentials.txt
-InvalidCredFilePath=C:\\PULSE\\PULSEInvalidCredentials.txt
-PatientSearchFile=C:\\PULSE\\SearchInput.txt
-AcfSelectFile=C:\\PULSE\\ACFPrefixSuffix.txt
