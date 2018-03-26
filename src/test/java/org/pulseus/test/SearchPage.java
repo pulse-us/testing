@@ -94,7 +94,4 @@ public class SearchPage {
 		this.setSearchZip(strZip);
 		driver.findElement(SearchSubmit).click();
 	}
-
-	
-
 }

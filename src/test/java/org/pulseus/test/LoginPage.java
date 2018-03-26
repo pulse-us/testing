@@ -1,7 +1,6 @@
 package org.pulseus.test;
 
 import org.openqa.selenium.By;
-
 import org.openqa.selenium.WebDriver;
 
 public class LoginPage {
@@ -19,6 +18,7 @@ public class LoginPage {
 		public void setUserName(String strUserName)
 		{
 			driver.findElement(LoginUserName).sendKeys(strUserName);
+			
 		}
 		
 		public void setPassword(String strPassword)

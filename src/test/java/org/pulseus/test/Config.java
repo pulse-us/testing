@@ -59,7 +59,6 @@ public class Config {
 				driver.get(WebsiteURL);
 
 				System.out.println("Successfully opened PULSE website");
-		        //driver.quit();
 				return driver;
 	}
 
@@ -70,7 +69,6 @@ public class Config {
 				driver.get(WebsiteURL);
 
 		        System.out.println("Successfully opened PULSE website");
-		        //driver.quit();
 				return driver;
 	}
 	
@@ -82,11 +80,7 @@ public class Config {
 		        BufferedReader BR = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 				ArrayList<String> cred = new ArrayList<String>();
 				
-				for (int i = 0; BR.ready();i++)
-				{
-					cred.add(BR.readLine());
-				}
-				
+				while (BR.ready()) { cred.add(BR.readLine());}
 				BR.close();
 				in.close();
 				
@@ -102,7 +96,6 @@ public class Config {
 				WebElement nextmessageElement = wait.until(
 						ExpectedConditions.presenceOfElementLocated(By.id("selectAcfPrefix")));
 				
-				//Wait for 5 Sec
 				Thread.sleep(5000);
 				
 				if (nextmessageElement.isDisplayed()) { System.out.println("Successfully LoggedIn"); } 
