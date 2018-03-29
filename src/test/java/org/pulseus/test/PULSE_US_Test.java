@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -60,10 +61,14 @@ public class PULSE_US_Test  extends Config {
 		Thread.sleep(5000);
 		objLoginPage.loginToPulse(cred.get(0), cred.get(1));
 		
-		WebDriverWait wait = new WebDriverWait(driver,2);
+		System.out.println("After Clicking");
+		
+		WebDriverWait wait = new WebDriverWait(driver,5);
 
-		WebElement nextmessageElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("error-box")));
-
+		WebElement nextmessageElement = 
+			//wait.until(ExpectedConditions.presenceOfElementLocated(By.id("error-box")));
+			wait.until(ExpectedConditions.presenceOfElementLocated(By.className("lexicon-icon-outline")));
+			
 		if (nextmessageElement.isDisplayed()) { System.out.println("UnSuccessfully LogIn"); } else {System.out.println("Login Successful");}
 	}
 
@@ -73,8 +78,12 @@ public class PULSE_US_Test  extends Config {
 		
 		SearchPage objSearchPage;
 		objSearchPage = new SearchPage(driver);
-
+		InputStream in;
+		WebDriverWait wait  = new WebDriverWait(driver,5);
+		WebElement nextmessageElement;
+        /*
         InputStream in = PULSE_US_Test.class.getClassLoader().getResourceAsStream(ACF_SELECT_FILE);
+        
         BufferedReader ABR = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 		ArrayList<String> acfCrt = new ArrayList<String>();
 		
@@ -86,9 +95,25 @@ public class PULSE_US_Test  extends Config {
 		objSearchPage.clickAcfSelect(acfCrt.get(0),acfCrt.get(1));
 		
 		System.out.println("Submitted ACF");
+		*/
 		
-		WebDriverWait wait = new WebDriverWait(driver,2);
-		WebElement nextmessageElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("given")));
+		/*
+		driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+		driver.switchTo().defaultContent(); // you are now outside both frames
+		driver.switchTo().frame(driver.findElement(By.id("_com_liferay_iframe_web_portlet_IFramePortlet_INSTANCE_9lPAiMRQi35X_iframe")));
+			
+		//int size = driver.findElements(By.tagName("frame")).size();
+		//System.out.println("Total number of iframes " + size);
+		//driver.switchTo().frame("portlet-dropzone portlet-column-content portlet-column-content-only");
+		//driver.switchTo().frame(0);             //frame("portlet-content");				//frame("layout-column_column-1");
+		//_com_liferay_iframe_web_portlet_IFramePortlet_INSTANCE_9lPAiMRQi35X_iframe
+		
+		WebDriverWait wait = new WebDriverWait(driver,5);
+		WebElement nextmessageElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("given"))); 
+			//By.className(".input-sm.form-control.ng-pristine.ng-empty.ng-invalid.ng-invalid-required.ng-touched")));
+			//	By.className("input-sm form-control ng-pristine ng-empty ng-invalid ng-invalid-required ng-touched")));
+				//By.className("btn btn-lg btn-block btn-success btn-active-nav")));
+		*/
 		//Thread.sleep(2000);
 		
 		System.out.println("In Search Page");
@@ -285,7 +310,7 @@ public class PULSE_US_Test  extends Config {
 		}
 	}
 
-	@Test
+	/*@Test
 	public void Review_Test_TC004() throws InterruptedException, IOException {
 		driver = Login();
 		
@@ -313,5 +338,5 @@ public class PULSE_US_Test  extends Config {
 		
 		WebElement r_b = driver.findElement(By.xpath("//*[@class='btn btn-lg btn-block btn-primary']"));
 		((JavascriptExecutor) driver).executeScript("arguments[0].click();", r_b);
-	}	
+	}*/
 }

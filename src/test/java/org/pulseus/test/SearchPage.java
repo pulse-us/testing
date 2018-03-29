@@ -70,7 +70,7 @@ public class SearchPage {
 		}
 	public void setSearchState(String strState) {
 		Select selSrchDD = new Select(driver.findElement(SearchState));
-		selSrchDD.selectByVisibleText(strState);
+		if(!strState.isEmpty()) selSrchDD.selectByVisibleText(strState);
 		}
 	public void setSearchZip(String strZip) {
 		driver.findElement(SearchZip).sendKeys(strZip);

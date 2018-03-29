@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -75,7 +76,9 @@ public class Config {
 	@Test
 	public WebDriver Login() throws InterruptedException, IOException {
 				WebDriver driver = Open_Chrome();
+				driver.manage().window().maximize();
 				LoginPage objLoginPage;
+				
 		        InputStream in = PULSE_US_Test.class.getClassLoader().getResourceAsStream(VALID_CRED_FILE);
 		        BufferedReader BR = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 				ArrayList<String> cred = new ArrayList<String>();
@@ -91,11 +94,18 @@ public class Config {
 				Thread.sleep(5000);
 				
 				objLoginPage.loginToPulse(cred.get(0), cred.get(1));
-				WebDriverWait wait = new WebDriverWait(driver,2);
 				
-				WebElement nextmessageElement = wait.until(
-						ExpectedConditions.presenceOfElementLocated(By.id("selectAcfPrefix")));
+				driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+				driver.switchTo().defaultContent(); // you are now outside both frames
+				driver.switchTo().frame(driver.findElement(By.id("_com_liferay_iframe_web_portlet_IFramePortlet_INSTANCE_9lPAiMRQi35X_iframe")));
 				
+				WebDriverWait wait = new WebDriverWait(driver,5);
+				
+				//WebElement nextmessageElement = wait.until(
+						//ExpectedConditions.presenceOfElementLocated(By.id("selectAcfPrefix")));
+					//	ExpectedConditions.presenceOfElementLocated(By.className("portlet-title-text")));
+				//WebDriverWait wait = new WebDriverWait(driver,5);
+				WebElement nextmessageElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("given")));
 				Thread.sleep(5000);
 				
 				if (nextmessageElement.isDisplayed()) { System.out.println("Successfully LoggedIn"); } 
