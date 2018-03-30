@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -18,6 +19,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
+
+import com.google.common.base.CharMatcher;
 
 public class PULSE_US_Test  extends Config {
     
@@ -30,8 +33,9 @@ public class PULSE_US_Test  extends Config {
      * Close browser windows and terminate WebDriver session.
      */
     @AfterMethod
-    public void afterMethod() {
+    public void AfterMethod() {
         driver.quit();
+        System.out.println("InAfterMethod");
     }
 
     @Test
@@ -48,7 +52,7 @@ public class PULSE_US_Test  extends Config {
 		BufferedReader BR = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 		ArrayList<String> cred = new ArrayList<String>();
 
-		for (int i = 0; BR.ready();i++) { cred.add(BR.readLine()); }
+		while(BR.ready()) { cred.add(BR.readLine()); }
 
 		BR.close();
 		in.close();
@@ -57,27 +61,33 @@ public class PULSE_US_Test  extends Config {
 		Thread.sleep(5000);
 		objLoginPage.loginToPulse(cred.get(0), cred.get(1));
 		
-		WebDriverWait wait = new WebDriverWait(driver,2);
+		System.out.println("After Clicking");
+		
+		WebDriverWait wait = new WebDriverWait(driver,5);
 
-		WebElement nextmessageElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("error-box")));
-
+		WebElement nextmessageElement = 
+			//wait.until(ExpectedConditions.presenceOfElementLocated(By.id("error-box")));
+			wait.until(ExpectedConditions.presenceOfElementLocated(By.className("lexicon-icon-outline")));
+			
 		if (nextmessageElement.isDisplayed()) { System.out.println("UnSuccessfully LogIn"); } else {System.out.println("Login Successful");}
 	}
 
 	@Test
 	public void Search_Test_TC003() throws InterruptedException, IOException {
 		driver = Login();
+		
 		SearchPage objSearchPage;
 		objSearchPage = new SearchPage(driver);
-
+		InputStream in;
+		WebDriverWait wait  = new WebDriverWait(driver,5);
+		WebElement nextmessageElement;
+        /*
         InputStream in = PULSE_US_Test.class.getClassLoader().getResourceAsStream(ACF_SELECT_FILE);
+        
         BufferedReader ABR = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 		ArrayList<String> acfCrt = new ArrayList<String>();
 		
-		for( int i = 0; ABR.ready();i++)
-		{
-			acfCrt.add(ABR.readLine());
-		}
+		while(ABR.ready()) 	{ 	acfCrt.add(ABR.readLine());  }
 		
 		ABR.close();
 		in.close();
@@ -85,10 +95,26 @@ public class PULSE_US_Test  extends Config {
 		objSearchPage.clickAcfSelect(acfCrt.get(0),acfCrt.get(1));
 		
 		System.out.println("Submitted ACF");
-		WebDriverWait wait = new WebDriverWait(driver,2);
+		*/
 		
-		WebElement nextmessageElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("given")));
-		Thread.sleep(2000);
+		/*
+		driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+		driver.switchTo().defaultContent(); // you are now outside both frames
+		driver.switchTo().frame(driver.findElement(By.id("_com_liferay_iframe_web_portlet_IFramePortlet_INSTANCE_9lPAiMRQi35X_iframe")));
+			
+		//int size = driver.findElements(By.tagName("frame")).size();
+		//System.out.println("Total number of iframes " + size);
+		//driver.switchTo().frame("portlet-dropzone portlet-column-content portlet-column-content-only");
+		//driver.switchTo().frame(0);             //frame("portlet-content");				//frame("layout-column_column-1");
+		//_com_liferay_iframe_web_portlet_IFramePortlet_INSTANCE_9lPAiMRQi35X_iframe
+		
+		WebDriverWait wait = new WebDriverWait(driver,5);
+		WebElement nextmessageElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("given"))); 
+			//By.className(".input-sm.form-control.ng-pristine.ng-empty.ng-invalid.ng-invalid-required.ng-touched")));
+			//	By.className("input-sm form-control ng-pristine ng-empty ng-invalid ng-invalid-required ng-touched")));
+				//By.className("btn btn-lg btn-block btn-success btn-active-nav")));
+		*/
+		//Thread.sleep(2000);
 		
 		System.out.println("In Search Page");
 		
@@ -96,24 +122,25 @@ public class PULSE_US_Test  extends Config {
 		BufferedReader BR = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 		ArrayList<String> srchCrt = new ArrayList<String>();
 		
-		for (int i = 0; BR.ready();i++)
-		{
-			srchCrt.add(BR.readLine());
-		}
+		while (BR.ready() ) 		{ 	srchCrt.add(BR.readLine()); }
 		
 		BR.close();
 		in.close();
-				objSearchPage.clickSearchSubmit(srchCrt.get(0),srchCrt.get(1),srchCrt.get(2),
-				srchCrt.get(3),srchCrt.get(4),srchCrt.get(5),
-				srchCrt.get(6),srchCrt.get(7),srchCrt.get(8),srchCrt.get(9),srchCrt.get(10)
-				);
+		
+		objSearchPage.clickSearchSubmit(
+										srchCrt.get(0),srchCrt.get(1),srchCrt.get(2),
+										srchCrt.get(3),srchCrt.get(4),srchCrt.get(5),
+										srchCrt.get(6),srchCrt.get(7),srchCrt.get(8),
+										srchCrt.get(9),srchCrt.get(10)
+										);
 		
 		LocalDateTime submitTime = LocalDateTime.now(); 
-			DateTimeFormatter format = DateTimeFormatter.ofPattern("MMM dd, yyyy hh:mm:ss a"); 
-			String submitTimeStr = submitTime.format(format); 
-			System.out.printf("Data Submission Time : %s %n", submitTimeStr); 
+		DateTimeFormatter format = DateTimeFormatter.ofPattern("MMM dd, yyyy hh:mm:ss a"); 
+		String submitTimeStr = submitTime.format(format); 
+		System.out.printf("Data Submission Time : %s %n", submitTimeStr); 
 		
 		Thread.sleep(5000);
+		
 		List <WebElement> col = driver.findElements(By.xpath(
 		"/html/body/div/div[1]/div[2]/div[2]/ai-patient-review/div/div/div[2]/div/div/div/table/tbody/tr[1]/td"));
 				
@@ -122,14 +149,12 @@ public class PULSE_US_Test  extends Config {
 				
 		System.out.println("No of columns : " +col.size());
 		System.out.println("No of rows : " +row.size());
-		
 				
 		WebElement baseTable = driver.findElement(By.tagName("table"));
 		
 		WebElement tabFullName = baseTable.findElement(By.xpath(
-		"/html/body/div/div[1]/div[2]/div[2]/ai-patient-review/div/div/div[2]/div/div/div/table/tbody/tr[1]/td[1]"
-		));
-		
+				"/html/body/div/div[1]/div[2]/div[2]/ai-patient-review/div/div/div[2]/div/div/div/table/tbody/tr[1]/td[1]"
+				));
 		System.out.println("TabFullName " +tabFullName.getText());
 		
 		WebElement tabDOB = baseTable.findElement(By.xpath(
@@ -164,31 +189,128 @@ public class PULSE_US_Test  extends Config {
 				));;
 		while (tabRecFound.getText().contains("pending") )
 		{
-			System.out.println("TabRecFound " +tabRecFound.getText());							
+			//System.out.println("TabRecFound " +tabRecFound.getText());							
 		
 		}		
 		
-		System.out.println("TabRecFound " +tabRecFound.getText());
+		//System.out.println("TabRecFound Cnt " +tabRecFound.getText());
 		
-		WebElement stg_button = driver.findElement(By.xpath("//*[@class='btn btn-success btn-sm ng-scope']"));
+		@SuppressWarnings("deprecation")
+		int RecCnt = Integer.parseInt(CharMatcher.DIGIT.retainFrom(tabRecFound.getText()));
 		
-		System.out.println("Stg Button Text " +stg_button.getText());
+		System.out.println("TabRecFound Cnt " +RecCnt);
 		
-		stg_button.click();
-		
-		WebElement review_button = driver.findElement(By.xpath("//*[@class='col-md-2 col-sm-3']"));
-		
-		WebElement r_b = driver.findElement(By.xpath("//*[@class='btn btn-lg btn-block btn-primary']"));
-		((JavascriptExecutor) driver).executeScript("arguments[0].click();", r_b);
-		
-		nextmessageElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@class='ng-isolate-scope']")));
-		
-		Thread.sleep(2000);
-		
-		System.out.println("Clicked Review Button");
+		if (RecCnt > 0 )
+		{
+			WebElement stg_button = driver.findElement(By.xpath("//*[@class='btn btn-success btn-sm ng-scope']"));
+			
+			//System.out.println("Stg Button Text " +stg_button.getText());
+			
+			stg_button.click();
+			
+			nextmessageElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@class='modal ng-isolate-scope in']")));
+			
+			
+			//WebElement PatRecName = driver.findElement(By.xpath("//*[@class='ng-binding']"));
+			WebElement PatRecTab = driver.findElement(By.xpath("//*[@class='table table-condensed']"));
+			
+			WebElement popPatName = PatRecTab.findElement(By.xpath(
+					"/html/body/div[3]/div/div/div/div[2]/div[2]/table/tbody/tr/td[2]"
+								));
+			
+			System.out.println("Pat Rec Name " + popPatName.getText());
+			
+			if(popPatName.getText().equalsIgnoreCase(srchCrt.get(0) + " " +srchCrt.get(1)))
+			{
+				System.out.println("Staging Pat Found");
+				
+				///Start from here
+				WebElement popPatSelect = PatRecTab.findElement(
+						By.xpath("//*[@class='ng-pristine ng-untouched ng-valid ng-empty']"));
+						
+						
+						//"//*[@id=\"recordSelect-104\"]"));
+				//By.xpath("//*[@class='fa fa-save']"));
+				popPatSelect.click(); 
+				
+				Thread.sleep(2000);
+				
+				WebElement popPatSave = driver.findElement(By.xpath("//*[@class='btn btn-success pull-right']"));
+				
+				
+				System.out.println("Save Button " +popPatSave.getText());
+				
+				popPatSave.click();
+				
+				Thread.sleep(2000);
+				
+				
+				WebElement r_b = driver.findElement(By.xpath("//*[@class='btn btn-lg btn-block btn-primary']"));
+				((JavascriptExecutor) driver).executeScript("arguments[0].click();", r_b);
+				
+				//reviewTab.click();
+				
+				nextmessageElement = wait.until(ExpectedConditions.presenceOfElementLocated(
+						By.xpath("//*[@class='btn btn-sm panel-button']")));
+				System.out.println("In Review Page");
+				
+				
+				
+				
+				/*WebElement downButton = wait.until(ExpectedConditions.presenceOfElementLocated(
+						By.xpath("//*[@class='btn btn-sm panel-button']")));
+				downButton.click();
+				*/
+				
+				/*WebElement ReviewRecords = driver.findElement(By.xpath("//*[@class='panel panel-primary']"));
+				String ReviewText = ReviewRecords.getText();
+				System.out.println("Review Text " + ReviewText);
+				while(!ReviewText.equals(srchCrt.get(0) + " " +srchCrt.get(1)))
+				{
+				ReviewText = ReviewRecords.getText();
+				System.out.println("Staged Patient Found");
+				}*/
+				Thread.sleep(50000);
+				wait = new WebDriverWait(driver,10);
+				WebElement stagedPatRecord = wait.until(ExpectedConditions.presenceOfElementLocated(
+				//By.xpath("//*[@class='btn btn-success']")));
+						//By.xpath("/html/body/div/div[1]/div[2]/div/ai-acf-patient-list/div/div/div[2]/div/div/div/table/tbody/tr[1]/td[2]")));
+				//By.xpath("//*[@class='ng-binding']")));
+				//		By.xpath("/html/body/div/div[1]/div[2]/div/ai-acf-patient-list/div/div/div[2]/div/div/h3")));
+				//		By.xpath("//h3[@class='ng-binding']")));
+				 //By.xpath("/html/body/div/div[1]/div[2]/div/ai-acf-patient-list/div/div/div[2]/div/div/h3")));
+				//By.xpath("/html/body/div/div[1]/div[2]/div/ai-acf-patient-list/div/div/div[2]/div/div/h3")));
+						By.xpath("/html/body/div/div[1]/div[2]/div/ai-acf-patient-list/div/div/div[2]/div/div/h3/div/button[1]/span")));
+				
+				String stagedPatname = stagedPatRecord.getText();
+				System.out.println("stagedPatname " + stagedPatname.substring(9,24));
+				//if(stagedPatname.equals(srchCrt.get(0) + " " +srchCrt.get(1)))
+				if(stagedPatname.substring(9,24).equals(srchCrt.get(0) + " " +srchCrt.get(1)))
+				//System.out.println("GooButton Text " + gooButton.getText());
+				//if (gooButton.getText().equals(srchCrt.get(0) + " " +srchCrt.get(1)))
+						{
+					System.out.println("Staged Patient Found");
+						}
+						
+				
+			}
+			
+			/*
+			WebElement review_button = driver.findElement(By.xpath("//*[@class='col-md-2 col-sm-3']"));
+			
+			WebElement r_b = driver.findElement(By.xpath("//*[@class='btn btn-lg btn-block btn-primary']"));
+			((JavascriptExecutor) driver).executeScript("arguments[0].click();", r_b);
+			
+			nextmessageElement = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@class='ng-isolate-scope']")));
+			
+			Thread.sleep(2000);
+			
+			System.out.println("Clicked Review Button");
+			*/
+		}
 	}
 
-	@Test
+	/*@Test
 	public void Review_Test_TC004() throws InterruptedException, IOException {
 		driver = Login();
 		
@@ -199,7 +321,7 @@ public class PULSE_US_Test  extends Config {
         BufferedReader ABR = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 		ArrayList<String> acfCrt = new ArrayList<String>();
 		
-		for( int i = 0; ABR.ready();i++)
+		while ( ABR.ready())
 		{
 			acfCrt.add(ABR.readLine());
 		}
@@ -216,5 +338,5 @@ public class PULSE_US_Test  extends Config {
 		
 		WebElement r_b = driver.findElement(By.xpath("//*[@class='btn btn-lg btn-block btn-primary']"));
 		((JavascriptExecutor) driver).executeScript("arguments[0].click();", r_b);
-	}	
+	}*/
 }
